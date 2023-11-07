@@ -14,42 +14,23 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
     private String password;
-
-    @Column(name = "firstName")
     private String firstName;
-
-    @Column(name = "lastName")
     private String lastName;
-
-    @Column(name = "address")
     private String address;
-
-    @Column(name = "gender")
     private String gender;
-
-    @Column(name = "roleId")
     private String roleId;
-
-    @Column(name = "phonenumber")
     private String phonenumber;
-
-    @Column(name = "positionId")
     private String positionId;
-
-    @Column(name = "image")
     private String image;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt")
+    @Column(nullable = false, name = "createdAt")
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedAt")
+    @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
 
 }

@@ -7,16 +7,15 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "allcodes")
-public class AllcodesEntity {
+@Table(name = "doctor_clinic_specialty")
+public class DoctorClinicSpecialtyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String keyMap;
-    private String type;
-    private String valueEn;
-    private String valueVi;
+    private Long doctorId;
+    private Long clinicId;
+    private Long specialtyId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")
@@ -25,4 +24,5 @@ public class AllcodesEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+
 }
