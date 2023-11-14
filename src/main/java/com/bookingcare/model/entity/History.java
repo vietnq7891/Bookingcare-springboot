@@ -7,16 +7,20 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "allcodes")
-public class AllcodesEntity {
+@Table(name = "history")
+public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String keyMap;
-    private String type;
-    private String valueEn;
-    private String valueVi;
+    private Long patientId;
+    private Long doctorId;
+
+    @Lob
+    private String description;
+
+    @Lob
+    private String files;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")

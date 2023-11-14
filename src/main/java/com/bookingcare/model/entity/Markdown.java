@@ -7,23 +7,26 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "booking")
-public class BookingEntity {
+@Table(name = "markdown")
+public class Markdown {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String statusId;
+    @Lob
+    @Column(nullable = false)
+    private String contentHTML;
 
-    @Column(name = "doctorId")
+    @Lob
+    @Column(nullable = false)
+    private String contentMarkdown;
+
+    @Lob
+    private String description;
+
     private Long doctorId;
-
-    @Column(name = "patientId")
-    private Long patientId;
-
-    private String date;
-    private String timeType;
-    private String token;
+    private Long specialtyId;
+    private Long clinicId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")
@@ -32,4 +35,5 @@ public class BookingEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+
 }

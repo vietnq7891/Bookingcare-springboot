@@ -7,26 +7,17 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "markdown")
-public class MarkdownEntity {
+@Table(name = "schedule")
+public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(nullable = false)
-    private String contentHTML;
-
-    @Lob
-    @Column(nullable = false)
-    private String contentMarkdown;
-
-    @Lob
-    private String description;
-
+    private Integer currentNumber;
+    private Integer maxNumber;
+    private String date;
+    private String timeType;
     private Long doctorId;
-    private Long specialtyId;
-    private Long clinicId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")

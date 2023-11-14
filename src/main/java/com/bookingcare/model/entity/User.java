@@ -1,27 +1,29 @@
 package com.bookingcare.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
+    @JsonIgnore
     private String password;
     private String firstName;
     private String lastName;
     private String address;
     private String gender;
-    private String roleId;
-    private String phonenumber;
+    private String phoneNumber;
     private String positionId;
     private String image;
 
@@ -32,5 +34,10 @@ public class UserEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<Role> roles;
 
 }
