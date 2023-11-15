@@ -11,9 +11,9 @@ import java.util.Date;
 @Component
 @Slf4j
 public class JwtTokenProvider {
-    @Value("${vi.jwt.secret}")
+    @Value("${spring.jwt.secret-key}")
     private String JWT_SECRET;
-    @Value("${vi.jwt.expiration}")
+    @Value("${spring.jwt.expiration-time}")
     private int JWT_EXPIRATION;
     public String generateToken(CustomUserDetails customUserDetails) {
         Date now = new Date();

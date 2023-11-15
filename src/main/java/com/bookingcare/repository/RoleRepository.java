@@ -1,4 +1,4 @@
-package com.bookingcare.security.repository;
+package com.bookingcare.repository;
 
 import com.bookingcare.model.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

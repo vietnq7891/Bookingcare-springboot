@@ -1,6 +1,5 @@
 package com.bookingcare.api;
-
-import com.bookingcare.model.entity.User;
+import com.bookingcare.model.dto.*;
 import com.bookingcare.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,94 +10,97 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
-//    @Autowired
-//    private UserService userService;
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<Object> handleLogin(@RequestBody User user) {
-//        try {
-//            String email = user.getEmail();
-//            String password = user.getPassword();
-//
-//            // Check if email and password are provided
-//            if (email == null || password == null) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                        .body(new ApiResponse(1, "Thiếu thông số đầu vào!"));
-//            }
-//
-//            UserData userData = userService.handleUserLogin(email, password);
-//
-//            return ResponseEntity.ok(new ApiResponse(userData.getErrCode(), userData.getErrMessage(), userData.getUser()));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
-//
-//    @GetMapping("/getAllUsers")
-//    public ResponseEntity<Object> handleGetAllUsers(@RequestParam(required = false) String id) {
-//        try {
-//            // Check if id is provided
-//            if (id == null) {
-//                return ResponseEntity.ok(new ApiResponse(1, "Thiếu tham số bắt buộc", null));
-//            }
-//
-//            Object users = userService.getAllUsers(id);
-//
-//            return ResponseEntity.ok(new ApiResponse(0, "OK", users));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
-//
-//    @PostMapping("/createNewUser")
-//    public ResponseEntity<Object> handleCreateNewUser(@RequestBody User user) {
-//        try {
-//            String message = userService.createNewUser(user);
-//            return ResponseEntity.ok(new ApiResponse(0, "OK", message));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
-//
-//    @PostMapping("/editUser")
-//    public ResponseEntity<Object> handleEditUser(@RequestBody User user) {
-//        try {
-//            String message = userService.updateUserData(user);
-//            return ResponseEntity.ok(new ApiResponse(0, "OK", message));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
-//
-//    @PostMapping("/deleteUser")
-//    public ResponseEntity<Object> handleDeleteUser(@RequestParam String id) {
-//        try {
-//            // Check if id is provided
-//            if (id == null) {
-//                return ResponseEntity.ok(new ApiResponse(1, "Thiếu tham số bắt buộc", null));
-//            }
-//
-//            String message = userService.deleteUser(id);
-//
-//            return ResponseEntity.ok(new ApiResponse(0, "OK", message));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
-//
-//    @GetMapping("/getAllCode")
-//    public ResponseEntity<Object> getAllCode(@RequestParam String type) {
-//        try {
-//            Object data = userService.getAllCodeService(type);
-//            return ResponseEntity.ok(data);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(-1, "Lỗi từ máy chủ"));
-//        }
-//    }
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> handleLogin(@RequestBody LoginRequest request) {
+        try {
+            String email = request.getEmail();
+            String password = request.getPassword();
+
+            // Kiểm tra xem đã nhập vào chưa
+            if (email == null || password == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiResponse(1, "Missing inputs parameters!"));
+            }
+
+            UserResponse userData = userService.handleUserLogin(email, password);
+
+            return ResponseEntity.ok(new ApiResponse(userData.getErrCode(), userData.getErrMessage(), userData.getUser()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<Object> handleGetAllUsers(@RequestParam(value = "id") String id) {
+        try {
+            // Kiểm tra id
+            if (id == null) {
+                return ResponseEntity.ok(new ApiResponse(1, "Missing required parameters", null));
+            }
+
+            UserResponse users = userService.getAllUsers(id);
+
+            return ResponseEntity.ok(new ApiResponse(0, "OK", users.getUsers()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Object> handleCreateNewUser(@RequestBody UserRequest data) {
+        try {
+            UserResponse response = userService.createNewUser(data);
+
+            return ResponseEntity.ok(new ApiResponse(response.getErrCode(), response.getErrMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<Object> handleEditUser(@RequestBody UserRequest data) {
+        try {
+            UserResponse response = userService.updateUserData(data);
+
+            return ResponseEntity.ok(new ApiResponse(response.getErrCode(), response.getErrMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Object> handleDeleteUser(@RequestBody DeleteUserRequest request) {
+        try {
+            // Kiểm tra id
+            if (request.getId() == null) {
+                return ResponseEntity.ok(new ApiResponse(1, "Missing required parameters"));
+            }
+
+            UserResponse response = userService.deleteUser(request.getId());
+
+            return ResponseEntity.ok(new ApiResponse(response.getErrCode(), response.getErrMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
+
+    @GetMapping("/getAllCode")
+    public ResponseEntity<Object> getAllCode(@RequestParam(value = "type") String type) {
+        try {
+            UserResponse data = userService.getAllCodeService(type);
+
+            return ResponseEntity.ok(new ApiResponse(data.getErrCode(), data.getErrMessage(), data.getData()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(-1, "Error from server"));
+        }
+    }
 }
