@@ -1,17 +1,15 @@
-package com.bookingcare.model.entity;
+package com.bookingcare.security.entities;
 
 import lombok.Data;
 
 import javax.persistence.*;
 
-@Data
 @Entity
+@Data
 @Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private Integer id;
     private String name;
-
 }

@@ -14,7 +14,7 @@ spring:
     header-string: Authorization
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/booking_care
+    url: jdbc:mysql://localhost:33061/booking_care
     username: root
     password:
     hikari:
@@ -37,6 +37,9 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+
+  main:
+    allow-circular-references: true
 
 
 
