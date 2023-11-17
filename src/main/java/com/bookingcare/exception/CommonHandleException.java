@@ -19,12 +19,12 @@ public class CommonHandleException {
     public ResponseEntity<Object> handleException(Throwable ex, HttpServletRequest request) {
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>(ErrorMessage.builder()
-                .code(1)
-                .message("loi gi")
+                .code(0)
+                .message("Lỗi gì ai biết")
                 .build(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @ExceptionHandler(BadCredentialsException.class)
-    public ErrorMessage LoginException(Exception ex, WebRequest request) {
-        return new ErrorMessage(2, "Lỗi đăng nhập");
-    }
+//    @ExceptionHandler(BadCredentialsException.class)
+//    public ErrorMessage LoginException(Exception ex, WebRequest request) {
+//        return new ErrorMessage(1, "Missing inputs parameters!");
+//    }
 }

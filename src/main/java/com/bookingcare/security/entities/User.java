@@ -1,7 +1,9 @@
 package com.bookingcare.security.entities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -11,15 +13,29 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(unique = true, nullable = false)
     private String username;
-
     @Column(nullable = false)
     private String password;
-
     @Column(nullable = false)
-    private String fullName;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String gender;
+    private String roleId;
+    private String phoneNumber;
+    private String positionId;
+    private String avatar;
+
+
+//    @Column(nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+    private Date createdAt;
+
+//    @Column( nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+    private Date updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinTable(name = "users_roles",

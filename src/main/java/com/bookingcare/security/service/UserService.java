@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +34,13 @@ public class UserService implements IUserService {
 
     @Override
     public User save(User user) {
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Date currentDate = new Date();
+        user.setCreatedAt(currentDate);
+        user.setUpdatedAt(currentDate);
         return userRepository.save(user);
+
     }
 
     @Override
