@@ -30,11 +30,11 @@ public class User {
 
 
 //    @Column(nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+   @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
 //    @Column( nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)

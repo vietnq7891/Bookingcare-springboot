@@ -1,22 +1,26 @@
 package com.bookingcare.security.service;
 
+import com.bookingcare.common.ApiResponse;
+import com.bookingcare.exception.BaseException;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private IUserRepository userRepository;
     @Autowired
@@ -24,7 +28,9 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        hidePasswords(users);
+        return users;
     }
 
     @Override
@@ -33,19 +39,61 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User save(User user) {
+    public ApiResponse<User> save(User user) {
+        ApiResponse<User> response = new ApiResponse<>();
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Date currentDate = new Date();
-        user.setCreatedAt(currentDate);
-        user.setUpdatedAt(currentDate);
-        return userRepository.save(user);
+        try {
+            if (userRepository.existsByUsername(user.getUsername())) {
+                response.setErrCode(1); // Mã lỗi tùy thuộc vào ngữ cảnh
+                response.setErrMessage("Username already exists");
+                return response;
+            }
 
+            // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            Date currentDate = new Date();
+            user.setCreatedAt(currentDate);
+            user.setUpdatedAt(currentDate);
+
+            // Lưu người dùng vào cơ sở dữ liệu
+            User savedUser = userRepository.save(user);
+
+            // Cập nhật thông tin phản hồi
+            response.setData(savedUser);
+            response.setErrMessage("User created successfully");
+        } catch (Exception e) {
+            // Xử lý các loại ngoại lệ nếu cần
+            response.setErrCode(1); // Đặt mã lỗi tùy thuộc vào ngữ cảnh cụ thể
+            response.setErrMessage("Error creating user: " + e.getMessage());
+        }
+
+        return response;
     }
 
     @Override
-    public void remove(Integer id) {
-        userRepository.deleteById(id);
+    public ApiResponse remove(Integer id) {
+        ApiResponse response = new ApiResponse();
+        logger.info("id", id);
+
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+
+            if (optionalUser.isPresent()) {
+                // Người dùng tồn tại, xóa người dùng
+                userRepository.deleteById(id);
+
+                // Cập nhật thông tin phản hồi
+                response.setErrCode(0);
+                response.setErrMessage("The user is deleted!");
+            } else {
+                response.setErrCode(2);
+                response.setErrMessage("The user isn't exist!");
+            }
+        } catch (Exception e) {
+            throw new BaseException(100, "Error deleting user: " );
+        }
+
+        return response;
     }
 
     @Override
@@ -61,4 +109,56 @@ public class UserService implements IUserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    // Ẩn mật khẩu trong danh sách người dùng
+    private void hidePasswords(List<User> users) {
+        for (User user : users) {
+            user.setPassword(null);
+        }
+    }
+    @Override
+    public ApiResponse<User> updateUserData(User data) {
+        ApiResponse<User> response = new ApiResponse<>();
+
+        try {
+            // Kiểm tra xem có thiếu thông tin bắt buộc không
+            if (data.getId() == null || data.getRoleId() == null || data.getPositionId() == null || data.getGender() == null) {
+                response.setErrCode(2);
+                response.setErrMessage("Missing required parameters!");
+                return response;
+            }
+
+            // Kiểm tra xem người dùng có tồn tại không
+            User existingUser = userRepository.findById(data.getId()).orElse(null);
+
+            if (existingUser != null) {
+                // Cập nhật thông tin người dùng
+                existingUser.setFirstName(data.getFirstName());
+                existingUser.setLastName(data.getLastName());
+                existingUser.setAddress(data.getAddress());
+                existingUser.setRoleId(data.getRoleId());
+                existingUser.setPositionId(data.getPositionId());
+                existingUser.setGender(data.getGender());
+                existingUser.setPhoneNumber(data.getPhoneNumber());
+                if (data.getAvatar() != null) {
+                    existingUser.setAvatar(data.getAvatar());
+                }
+
+                // Lưu người dùng đã cập nhật vào cơ sở dữ liệu
+                User updatedUser = userRepository.save(existingUser);
+
+                // Cập nhật thông tin phản hồi
+                response.setData(updatedUser);
+                response.setErrMessage("Update the user succeeds");
+            } else {
+                response.setErrCode(1);
+                response.setErrMessage("User not found!");
+            }
+        } catch (Exception e) {
+            throw new BaseException(500,"Error updating user data: " );
+        }
+
+        return response;
+    }
 }
+

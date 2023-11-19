@@ -1,4 +1,5 @@
 package com.bookingcare.security.service;
+import com.bookingcare.common.ApiResponse;
 import com.bookingcare.service.IGeneralService;
 
 import com.bookingcare.security.entities.User;
@@ -8,4 +9,7 @@ import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User>, UserDetailsService {
     Optional<User> findByUsername(String username);
+    ApiResponse<User> save(User user);
+    ApiResponse<User> updateUserData(User data);
+
 }

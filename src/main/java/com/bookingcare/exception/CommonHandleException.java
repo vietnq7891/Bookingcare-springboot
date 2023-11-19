@@ -15,16 +15,19 @@ import java.io.IOException;
 @RestControllerAdvice
 @Slf4j
 public class CommonHandleException {
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<Object> handleException(Throwable ex, HttpServletRequest request) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<Object> handleBaseException(BaseException ex, HttpServletRequest request) {
         HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<>(ex.getErrorMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<Object> handleThrowable(Throwable ex, HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        // Xử lý các loại ngoại lệ khác nếu cần
         return new ResponseEntity<>(ErrorMessage.builder()
-                .code(0)
-                .message("Lỗi gì ai biết")
+                .code(500)
+                .message("Internal Server Error")
                 .build(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-//    @ExceptionHandler(BadCredentialsException.class)
-//    public ErrorMessage LoginException(Exception ex, WebRequest request) {
-//        return new ErrorMessage(1, "Missing inputs parameters!");
-//    }
 }

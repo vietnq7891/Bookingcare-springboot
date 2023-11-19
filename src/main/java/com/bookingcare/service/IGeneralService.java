@@ -1,5 +1,8 @@
 package com.bookingcare.service;
 
+import com.bookingcare.common.ApiResponse;
+import com.bookingcare.security.entities.User;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +11,7 @@ public interface IGeneralService<T> {
 
     Optional<T> findById(Integer id);
 
-    T save(T t);
+    ApiResponse<T>  save(T t);
 
-    void remove(Integer id);
+    ApiResponse remove(Integer id);
 }
