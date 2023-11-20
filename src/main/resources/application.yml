@@ -9,7 +9,7 @@ spring:
       roles: USER
   jwt:
     secret-key: quoc_viet
-    expiration-time: 86400000 # Thời gian hết hạn của token (miliseconds)
+    expiration-time: 86400000
     token-prefix: Bearer
     header-string: Authorization
   datasource:

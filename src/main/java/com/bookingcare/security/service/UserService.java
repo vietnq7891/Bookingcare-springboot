@@ -90,7 +90,7 @@ public class UserService implements IUserService {
                 response.setErrMessage("The user isn't exist!");
             }
         } catch (Exception e) {
-            throw new BaseException(100, "Error deleting user: " );
+            throw new BaseException(100, "Error deleting user" );
         }
 
         return response;
@@ -155,7 +155,7 @@ public class UserService implements IUserService {
                 response.setErrMessage("User not found!");
             }
         } catch (Exception e) {
-            throw new BaseException(500,"Error updating user data: " );
+            throw new BaseException(500,"Error updating user data" );
         }
 
         return response;

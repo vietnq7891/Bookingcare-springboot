@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 }).and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/api/login", "/api/get-all-users", "/api/create-new-user","/api/delete-user").permitAll()
+                .antMatchers("/", "/api/login", "/api/get-all-users", "/api/create-new-user","/api/delete-user","/api/edit-user").permitAll()
                 .antMatchers("/api/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
