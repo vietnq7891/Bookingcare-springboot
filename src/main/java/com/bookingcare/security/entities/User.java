@@ -1,4 +1,5 @@
 package com.bookingcare.security.entities;
+import com.bookingcare.model.entity.Allcode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -42,4 +43,14 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
+
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Allcode positionData;
+
+    @ManyToOne
+    @JoinColumn(name = "gender_id")
+    private Allcode genderData;
+
+
 }

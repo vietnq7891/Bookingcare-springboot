@@ -2,6 +2,8 @@ package com.bookingcare.security.service;
 
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.entity.Allcode;
+import com.bookingcare.repository.AllcodeRepository;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
@@ -90,7 +92,7 @@ public class UserService implements IUserService {
                 response.setErrMessage("The user isn't exist!");
             }
         } catch (Exception e) {
-            throw new BaseException(100, "Error deleting user" );
+            throw new BaseException(100, "Error deleting user");
         }
 
         return response;
@@ -116,6 +118,7 @@ public class UserService implements IUserService {
             user.setPassword(null);
         }
     }
+
     @Override
     public ApiResponse<User> updateUserData(User data) {
         ApiResponse<User> response = new ApiResponse<>();
@@ -155,10 +158,27 @@ public class UserService implements IUserService {
                 response.setErrMessage("User not found!");
             }
         } catch (Exception e) {
-            throw new BaseException(500,"Error updating user data" );
+            throw new BaseException(500, "Error updating user data");
         }
 
         return response;
     }
+
+    @Override
+    public ApiResponse<List<Allcode>> getAllCode(String typeInput) {
+        try {
+            if (typeInput == null || typeInput.isEmpty()) {
+                return new ApiResponse<>(1, "Missing required parameters!", null);
+            } else {
+                List<Allcode> allCodes = userRepository.findByPositionData_Type(typeInput);
+                return new ApiResponse<>(0, "Success", allCodes);
+            }
+        } catch (Exception e) {
+            return new ApiResponse<>(1, "Error retrieving all codes", null);
+        }
+    }
 }
+
+
+
 

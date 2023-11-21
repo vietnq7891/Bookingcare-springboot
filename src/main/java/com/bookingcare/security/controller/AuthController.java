@@ -133,4 +133,17 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/allcode")
+    public ResponseEntity<Object> getAllCode(@RequestParam String type) {
+        try {
+            Object data = userService.getAllCode(type);
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Get all code error: " + e.getMessage());
+            return new ResponseEntity<>(
+                    new ApiResponse<>(-1, "Error from server", null),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 }
