@@ -3,7 +3,6 @@ package com.bookingcare.security.service;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
 import com.bookingcare.model.entity.Allcode;
-import com.bookingcare.repository.AllcodeRepository;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
