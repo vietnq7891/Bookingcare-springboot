@@ -1,7 +1,6 @@
 package com.bookingcare.security.controller;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
-import com.bookingcare.exception.ErrorMessage;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.jwt.JwtResponse;
 import com.bookingcare.security.jwt.JwtService;
@@ -22,11 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.security.auth.login.LoginException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -42,8 +37,10 @@ public class AuthController {
 
     @Autowired
     private IUserService userService;
+
     @Autowired
     private FileStorageService fileStorageService;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> handleLogin(@RequestBody User user) {
@@ -88,7 +85,7 @@ public class AuthController {
     }
 
     @PostMapping("/create-new-user")
-    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user,  @RequestParam("avatar") MultipartFile avatarFile) {
+    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user, @RequestParam("avatar") MultipartFile avatarFile) {
         try {
             if (!avatarFile.isEmpty()) {
                 // Lưu file avatar
@@ -134,7 +131,7 @@ public class AuthController {
     }
 
     @GetMapping("/allcode")
-    public ResponseEntity<Object> getAllCode(@RequestParam String type) {
+    public ResponseEntity<Object> getAllCode(@RequestBody String type) {
         try {
             Object data = userService.getAllCode(type);
             return new ResponseEntity<>(data, HttpStatus.OK);
@@ -146,4 +143,6 @@ public class AuthController {
             );
         }
     }
+
+
 }

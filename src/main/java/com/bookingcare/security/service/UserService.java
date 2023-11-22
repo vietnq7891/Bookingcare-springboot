@@ -3,6 +3,7 @@ package com.bookingcare.security.service;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
 import com.bookingcare.model.entity.Allcode;
+import com.bookingcare.repository.AllcodeRepository;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
@@ -168,14 +169,21 @@ public class UserService implements IUserService {
         try {
             if (typeInput == null || typeInput.isEmpty()) {
                 return new ApiResponse<>(1, "Missing required parameters!", null);
+
             } else {
                 List<Allcode> allCodes = userRepository.findByPositionData_Type(typeInput);
+
+                if (allCodes.isEmpty()) {
+                    return new ApiResponse<>(1, "No matching records found", null);
+                }
+
                 return new ApiResponse<>(0, "Success", allCodes);
             }
         } catch (Exception e) {
             return new ApiResponse<>(1, "Error retrieving all codes", null);
         }
     }
+
 }
 
 

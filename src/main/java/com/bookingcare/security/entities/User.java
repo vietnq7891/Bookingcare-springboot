@@ -42,15 +42,15 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles;
+    private Set<Allcode> roles;
 
     @ManyToOne
-    @JoinColumn(name = "position_id")
+    @JoinColumn(name = "position_id", referencedColumnName = "keyMap")
     private Allcode positionData;
 
-    @ManyToOne
-    @JoinColumn(name = "gender_id")
-    private Allcode genderData;
 
+    @ManyToOne
+    @JoinColumn(name = "gender_id", referencedColumnName = "keyMap")
+    private Allcode genderData;
 
 }
