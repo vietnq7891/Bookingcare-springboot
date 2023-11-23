@@ -13,7 +13,7 @@ import java.util.List;
 public class Allcode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String keyMap;
     private String type;
@@ -29,24 +29,24 @@ public class Allcode {
     private Date updatedAt;
 
 
-    @OneToMany(mappedBy = "positionId")
+    @OneToMany(mappedBy = "positionData")
     private List<User> positionData;
 
-    @OneToMany(mappedBy = "gender")
+    @OneToMany(mappedBy = "genderData")
     private List<User> genderData;
 
-//    @OneToMany(mappedBy = "timeTypeData")
-//    private List<Schedule> timeTypeData;
-//
-//    @OneToMany(mappedBy = "priceTypeData")
-//    private List<DoctorInfor> priceTypeData;
-//
-//    @OneToMany(mappedBy = "provinceTypeData")
-//    private List<DoctorInfor> provinceTypeData;
-//
-//    @OneToMany(mappedBy = "paymentTypeData")
-//    private List<DoctorInfor> paymentTypeData;
-//
-//    @OneToMany(mappedBy = "timeTypeDataPatient")
-//    private List<Booking> timeTypeDataPatient;
+    @OneToMany(mappedBy = "timeTypeData")
+    private List<Schedule> timeTypeData;
+
+    @OneToMany(mappedBy = "priceTypeData")
+    private List<DoctorInfor> priceTypeData;
+
+    @OneToMany(mappedBy = "provinceTypeData")
+    private List<DoctorInfor> provinceTypeData;
+
+    @OneToMany(mappedBy = "paymentTypeData")
+    private List<DoctorInfor> paymentTypeData;
+
+    @OneToMany(mappedBy = "timeTypeDataPatient")
+    private List<Booking> timeTypeDataPatient;
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 public class Markdown {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Lob
     @Column(nullable = false)
@@ -25,9 +25,9 @@ public class Markdown {
     @Lob
     private String description;
 
-    private Long doctorId;
-    private Long specialtyId;
-    private Long clinicId;
+    private int doctorId;
+    private int specialtyId;
+    private int clinicId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")
@@ -38,7 +38,7 @@ public class Markdown {
     private Date updatedAt;
 
     @OneToOne
-    @JoinColumn(name = "doctorId")
-    private User doctor;
+    @JoinColumn(name = "doctorId",insertable = false, updatable = false)
+    private User user;
 
 }

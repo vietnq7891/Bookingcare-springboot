@@ -12,15 +12,15 @@ import java.util.Date;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String statusId;
 
-    @Column(name = "doctorId")
-    private Long doctorId;
 
-    @Column(name = "patientId")
-    private Long patientId;
+    private Integer doctorId;
+
+
+    private Integer patientId;
 
     private String date;
     private String timeType;
@@ -35,10 +35,10 @@ public class Booking {
     private Date updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "patientId", referencedColumnName = "id")
+    @JoinColumn(name = "patientId", referencedColumnName = "id",insertable = false, updatable = false)
     private User patientData;
 
     @ManyToOne
-    @JoinColumn(name = "timeType", referencedColumnName = "keyMap")
+    @JoinColumn(name = "timeType", referencedColumnName = "keyMap",insertable = false, updatable = false)
     private Allcode timeTypeDataPatient;
 }

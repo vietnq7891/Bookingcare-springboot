@@ -55,7 +55,7 @@ public class User {
     private Allcode genderData;
 
 
-    @OneToOne(mappedBy = "doctor")
+    @OneToOne(mappedBy = "user")
     private Markdown markdown;
 
     @OneToOne(mappedBy = "doctor")

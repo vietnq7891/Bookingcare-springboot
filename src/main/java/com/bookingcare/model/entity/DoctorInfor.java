@@ -12,13 +12,13 @@ import java.util.Date;
 public class DoctorInfor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
-    private Long doctorId;
+    private Integer doctorId;
 
-    private Long specialtyId;
-    private Long clinicId;
+    private Integer specialtyId;
+    private Integer clinicId;
 
     @Column(nullable = false)
     private String priceId;
@@ -48,19 +48,19 @@ public class DoctorInfor {
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
 
-     @ManyToOne
-     @JoinColumn(name = "doctorId", referencedColumnName = "id")
+     @OneToOne
+     @JoinColumn(name = "doctorId",insertable = false, updatable = false)
      private User doctor;
 
      @ManyToOne
-     @JoinColumn(name = "priceId", referencedColumnName = "keyMap")
+     @JoinColumn(name = "priceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode priceTypeData;
 
      @ManyToOne
-     @JoinColumn(name = "provinceId", referencedColumnName = "keyMap")
+     @JoinColumn(name = "provinceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode provinceTypeData;
 
      @ManyToOne
-     @JoinColumn(name = "paymentId", referencedColumnName = "keyMap")
+     @JoinColumn(name = "paymentId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode paymentTypeData;
 }

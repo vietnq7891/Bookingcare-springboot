@@ -11,11 +11,11 @@ import java.util.Date;
 public class DoctorClinicSpecialty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private Long doctorId;
-    private Long clinicId;
-    private Long specialtyId;
+    private Integer doctorId;
+    private Integer clinicId;
+    private Integer specialtyId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")

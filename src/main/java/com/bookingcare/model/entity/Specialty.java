@@ -11,7 +11,7 @@ import java.util.Date;
 public class Specialty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Lob
     private byte[] image;

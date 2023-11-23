@@ -11,10 +11,10 @@ import java.util.Date;
 public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private Long patientId;
-    private Long doctorId;
+    private Integer patientId;
+    private Integer doctorId;
 
     @Lob
     private String description;

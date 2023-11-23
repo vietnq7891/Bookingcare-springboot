@@ -12,13 +12,13 @@ import java.util.Date;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private Integer currentNumber;
     private Integer maxNumber;
     private String date;
     private String timeType;
-    private Long doctorId;
+    private Integer doctorId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "createdAt")
@@ -29,11 +29,11 @@ public class Schedule {
     private Date updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "timeType", referencedColumnName = "keyMap")
+    @JoinColumn(name = "timeType", referencedColumnName = "keyMap",insertable = false, updatable = false)
     private Allcode timeTypeData;
 
     @ManyToOne
-    @JoinColumn(name = "doctorId", referencedColumnName = "id")
+    @JoinColumn(name = "doctorId", referencedColumnName = "id",insertable = false, updatable = false)
     private User doctorData;
 
 }
