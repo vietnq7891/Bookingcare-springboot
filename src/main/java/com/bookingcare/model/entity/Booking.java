@@ -1,5 +1,6 @@
 package com.bookingcare.model.entity;
 
+import com.bookingcare.security.entities.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -32,4 +33,12 @@ public class Booking {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "patientId", referencedColumnName = "id")
+    private User patientData;
+
+    @ManyToOne
+    @JoinColumn(name = "timeType", referencedColumnName = "keyMap")
+    private Allcode timeTypeDataPatient;
 }

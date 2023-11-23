@@ -1,5 +1,6 @@
 package com.bookingcare.model.entity;
 
+import com.bookingcare.security.entities.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -46,4 +47,20 @@ public class DoctorInfor {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+
+     @ManyToOne
+     @JoinColumn(name = "doctorId", referencedColumnName = "id")
+     private User doctor;
+
+     @ManyToOne
+     @JoinColumn(name = "priceId", referencedColumnName = "keyMap")
+     private Allcode priceTypeData;
+
+     @ManyToOne
+     @JoinColumn(name = "provinceId", referencedColumnName = "keyMap")
+     private Allcode provinceTypeData;
+
+     @ManyToOne
+     @JoinColumn(name = "paymentId", referencedColumnName = "keyMap")
+     private Allcode paymentTypeData;
 }

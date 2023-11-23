@@ -1,5 +1,6 @@
 package com.bookingcare.model.entity;
 
+import com.bookingcare.security.entities.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -35,5 +36,9 @@ public class Markdown {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "doctorId")
+    private User doctor;
 
 }

@@ -85,15 +85,9 @@ public class AuthController {
     }
 
     @PostMapping("/create-new-user")
-    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user, @RequestParam("avatar") MultipartFile avatarFile) {
+    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user) {
         try {
-            if (!avatarFile.isEmpty()) {
-                // Lưu file avatar
-                fileStorageService.save(avatarFile);
 
-                // Cập nhật tên file avatar trong đối tượng User
-                user.setAvatar(avatarFile.getOriginalFilename());
-            }
 
             ApiResponse<User> response = userService.save(user);
 
@@ -131,7 +125,7 @@ public class AuthController {
     }
 
     @GetMapping("/allcode")
-    public ResponseEntity<Object> getAllCode(@RequestBody String type) {
+    public ResponseEntity<Object> getAllCode(@RequestParam String type) {
         try {
             Object data = userService.getAllCode(type);
             return new ResponseEntity<>(data, HttpStatus.OK);

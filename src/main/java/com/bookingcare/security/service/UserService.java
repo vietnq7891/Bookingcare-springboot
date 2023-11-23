@@ -27,6 +27,8 @@ public class UserService implements IUserService {
     private IUserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AllcodeRepository allcodeRepository;
 
     @Override
     public List<User> findAll() {
@@ -166,12 +168,13 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<List<Allcode>> getAllCode(String typeInput) {
+        logger.info("typeInput", typeInput);
         try {
             if (typeInput == null || typeInput.isEmpty()) {
                 return new ApiResponse<>(1, "Missing required parameters!", null);
 
             } else {
-                List<Allcode> allCodes = userRepository.findByPositionData_Type(typeInput);
+                List<Allcode> allCodes = allcodeRepository.findByType(typeInput);
 
                 if (allCodes.isEmpty()) {
                     return new ApiResponse<>(1, "No matching records found", null);

@@ -1,10 +1,11 @@
 package com.bookingcare.security.entities;
-import com.bookingcare.model.entity.Allcode;
+import com.bookingcare.model.entity.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,12 +46,25 @@ public class User {
     private Set<Allcode> roles;
 
     @ManyToOne
-    @JoinColumn(name = "position_id", referencedColumnName = "keyMap")
+    @JoinColumn(name = "positionId", referencedColumnName = "keyMap",insertable = false, updatable = false)
     private Allcode positionData;
 
 
     @ManyToOne
-    @JoinColumn(name = "gender_id", referencedColumnName = "keyMap")
+    @JoinColumn(name = "gender", referencedColumnName = "keyMap",insertable = false, updatable = false)
     private Allcode genderData;
+
+
+    @OneToOne(mappedBy = "doctor")
+    private Markdown markdown;
+
+    @OneToOne(mappedBy = "doctor")
+    private DoctorInfor doctorInfo;
+
+    @OneToMany(mappedBy = "doctorData")
+    private List<Schedule> doctorData;
+
+    @OneToMany(mappedBy = "patientData")
+    private List<Booking> patientData;
 
 }

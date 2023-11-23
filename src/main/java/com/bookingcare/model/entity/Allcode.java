@@ -29,10 +29,10 @@ public class Allcode {
     private Date updatedAt;
 
 
-    @OneToMany(mappedBy = "positionData")
+    @OneToMany(mappedBy = "positionId")
     private List<User> positionData;
 
-    @OneToMany(mappedBy = "genderData")
+    @OneToMany(mappedBy = "gender")
     private List<User> genderData;
 
 //    @OneToMany(mappedBy = "timeTypeData")
