@@ -1,6 +1,9 @@
 package com.bookingcare.api;
 
 import com.bookingcare.common.ApiResponse;
+import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.entity.DoctorInfor;
+import com.bookingcare.security.entities.User;
 import com.bookingcare.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,4 +28,5 @@ public class DoctorController {
             return new ApiResponse(-1, "Error from server...",null);
         }
     }
+
 }

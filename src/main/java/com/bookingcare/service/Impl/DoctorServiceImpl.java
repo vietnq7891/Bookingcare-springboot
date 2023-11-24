@@ -1,6 +1,9 @@
 package com.bookingcare.service.Impl;
 
 import com.bookingcare.common.ApiResponse;
+import com.bookingcare.exception.BaseException;
+import com.bookingcare.repository.DoctorRepository;
+import com.bookingcare.repository.SpecialtyRepository;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
 import com.bookingcare.service.DoctorService;
@@ -11,8 +14,13 @@ import java.util.List;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
+
+    @Autowired
+    DoctorRepository doctorRepository;
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    SpecialtyRepository specialtyRepository;
     @Override
     public ApiResponse getTopDoctorHome(int limit) {
         try {
@@ -26,4 +34,5 @@ public class DoctorServiceImpl implements DoctorService {
             return new ApiResponse(-1, "Error from server...", null);
         }
     }
+
 }
