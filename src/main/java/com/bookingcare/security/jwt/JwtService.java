@@ -5,14 +5,19 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Service
 public class JwtService {
+
     private static final String SECRET_KEY = "123456789";
     private static final long EXPIRE_TIME = 86400000000L;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
@@ -26,6 +31,8 @@ public class JwtService {
                 .setExpiration(new Date((new Date()).getTime() + EXPIRE_TIME * 1000))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
+
+
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -55,4 +62,6 @@ public class JwtService {
                 .getBody().getSubject();
         return userName;
     }
+
+
 }

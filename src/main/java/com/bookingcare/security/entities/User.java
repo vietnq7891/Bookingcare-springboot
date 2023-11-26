@@ -39,19 +39,17 @@ public class User {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Allcode> roles;
 
-    @ManyToOne
-    @JoinColumn(name = "positionId", referencedColumnName = "keyMap",insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roleId", referencedColumnName = "keyMap", insertable = false, updatable = false)
+    private Allcode roleData;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "positionId", referencedColumnName = "keyMap", insertable = false, updatable = false)
     private Allcode positionData;
 
-
-    @ManyToOne
-    @JoinColumn(name = "gender", referencedColumnName = "keyMap",insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gender", referencedColumnName = "keyMap", insertable = false, updatable = false)
     private Allcode genderData;
 
 

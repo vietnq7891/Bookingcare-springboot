@@ -1,6 +1,7 @@
 package com.bookingcare.security.controller;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.jwt.JwtResponse;
 import com.bookingcare.security.jwt.JwtService;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
@@ -58,7 +60,7 @@ public class AuthController {
             String jwt = jwtService.generateTokenLogin(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User currentUser = userService.findByUsername(user.getUsername()).get();
-            JwtResponse jwtResponse = new JwtResponse(jwt, currentUser.getId(), userDetails.getUsername(), currentUser.getEmail(), userDetails.getAuthorities());
+            JwtResponse jwtResponse = new JwtResponse(jwt, currentUser);
             return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(0, "OK", jwtResponse));
         }catch (UsernameNotFoundException | BadCredentialsException e) {
             throw new BaseException(1, "Incorrect username or password.");
@@ -114,9 +116,9 @@ public class AuthController {
     }
 
     @DeleteMapping("/delete-user")
-    public ResponseEntity<ApiResponse> deleteUser(@RequestParam int id) {
-//        Integer userId = request.get("id");
-        ApiResponse response = userService.remove(id);
+    public ResponseEntity<ApiResponse> deleteUser(@RequestBody User user) {
+        Integer userId = user.getId();
+        ApiResponse response = userService.remove(userId);
         if (response.getErrCode() == 0) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
@@ -125,9 +127,9 @@ public class AuthController {
     }
 
     @GetMapping("/allcode")
-    public ResponseEntity<Object> getAllCode(@RequestParam String type) {
+    public ResponseEntity<ApiResponse<List<Allcode>>> getAllCode(@RequestParam String type) {
         try {
-            Object data = userService.getAllCode(type);
+            ApiResponse<List<Allcode>> data  = userService.getAllCode(type);
             return new ResponseEntity<>(data, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("Get all code error: " + e.getMessage());

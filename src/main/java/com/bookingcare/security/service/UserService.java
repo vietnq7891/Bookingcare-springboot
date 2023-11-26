@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements IUserService {
@@ -168,7 +169,6 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<List<Allcode>> getAllCode(String typeInput) {
-        logger.info("typeInput", typeInput);
         try {
             if (typeInput == null || typeInput.isEmpty()) {
                 return new ApiResponse<>(1, "Missing required parameters!", null);
@@ -179,10 +179,11 @@ public class UserService implements IUserService {
                 if (allCodes.isEmpty()) {
                     return new ApiResponse<>(1, "No matching records found", null);
                 }
-
+                logger.info("Retrieved {} records for typeInput: {}", allCodes.size(), typeInput);
                 return new ApiResponse<>(0, "Success", allCodes);
             }
         } catch (Exception e) {
+            logger.error("Error retrieving all codes", e);
             return new ApiResponse<>(1, "Error retrieving all codes", null);
         }
     }

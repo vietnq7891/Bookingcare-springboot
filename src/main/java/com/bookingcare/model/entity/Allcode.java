@@ -1,16 +1,19 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "allcodes")
-public class Allcode {
+public class Allcode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,19 +24,19 @@ public class Allcode {
     private String valueVi;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "createdAt")
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "updatedAt")
     private Date updatedAt;
 
 
     @OneToMany(mappedBy = "positionData")
-    private List<User> positionData;
+    @JsonIgnore
+    private List<User> usersByPosition;
 
     @OneToMany(mappedBy = "genderData")
-    private List<User> genderData;
+    @JsonIgnore
+    private List<User> usersByGender;
 
     @OneToMany(mappedBy = "timeTypeData")
     private List<Schedule> timeTypeData;

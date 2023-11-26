@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface IUserService extends IGeneralService<User>, UserDetailsService {
     Optional<User> findByUsername(String username);

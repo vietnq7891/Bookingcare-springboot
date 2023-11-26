@@ -1,12 +1,16 @@
 package com.bookingcare.security.configure;
 import com.bookingcare.security.jwt.JwtAuthenticationFilter;
+import com.bookingcare.security.jwt.JwtService;
 import com.bookingcare.security.service.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,9 +24,11 @@ import java.util.Arrays;
 import java.util.List;
 
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     @Autowired
     private IUserService userService;
 
@@ -70,8 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 }).and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/api/login", "/api/get-all-users", "/api/create-new-user","/api/delete-user","/api/edit-user","/api/allcode","/api/top-doctor-home").permitAll()
-                .antMatchers("/api/**").hasRole("ADMIN")
+                .antMatchers("/", "/api/login").permitAll()
+                .antMatchers("/api/**").hasAuthority("R1")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
