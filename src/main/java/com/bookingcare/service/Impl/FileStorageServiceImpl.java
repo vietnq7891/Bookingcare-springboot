@@ -3,6 +3,9 @@ package com.bookingcare.service.Impl;
 import com.bookingcare.exception.BaseException;
 import com.bookingcare.service.FileStorageService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -11,49 +14,51 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileStorageServiceImpl.class);
+    private final Path root = Paths.get("uploads");
 
-    private final String uploadDir = "./uploads"; // Đường dẫn tới thư mục lưu trữ file
+    public FileStorageServiceImpl() {
+        try {
+            Files.createDirectories(root);
+        } catch (Exception ex) {
+            LOGGER.error("FileStorageServiceImpl createDirectories with ex: {}", ex);
+            throw new BaseException(500,"INTERNAL_SERVER_ERROR");
+        }
+    }
 
     @Override
     public void save(MultipartFile file) {
         try {
-            // Tạo thư mục nếu nó chưa tồn tại
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            // Lưu file vào thư mục
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(file.getInputStream(), filePath);
-
-        } catch (IOException e) {
-            throw new BaseException(3,"Failed to store file: " + e.getMessage());
+            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()));
+        } catch (FileAlreadyExistsException ex) {
+            LOGGER.warn(ex.getMessage());
+        }
+        catch (Exception ex) {
+            LOGGER.error("FileStorageServiceImpl save with ex: {}", ex);
+            throw new BaseException(1, "UPLOAD_ERROR");
         }
     }
 
     @Override
     public Resource load(String fileName) {
         try {
-            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (resource.exists()) {
+            Path file = root.resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable())
                 return resource;
-            } else {
-                throw new BaseException(3, "File not found:" + fileName);
-            }
-        } catch (MalformedURLException e) {
-            throw new BaseException(3, "File not found:" + fileName);
+            else
+                throw new BaseException(2,"LOAD_FILE_ERROR");
+        } catch (Exception ex) {
+            LOGGER.error("FileStorageServiceImpl save with ex: {}", ex);
+            throw new BaseException(1, "UPLOAD_ERROR");
         }
     }
-
 
 }

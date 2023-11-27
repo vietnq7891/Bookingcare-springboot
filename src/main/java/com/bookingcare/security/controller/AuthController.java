@@ -1,12 +1,14 @@
 package com.bookingcare.security.controller;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.UserDto;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.jwt.JwtResponse;
 import com.bookingcare.security.jwt.JwtService;
 import com.bookingcare.security.service.IUserService;
 import com.bookingcare.service.FileStorageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @CrossOrigin("*")
 @RestController
@@ -86,10 +95,20 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/create-new-user")
-    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user) {
-        try {
 
+
+
+    @PostMapping("/create-new-user")
+    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(
+            @RequestParam("user") String userData,
+            @RequestParam("avatar") MultipartFile avatarFile) {
+        try {
+            // Chuyển đổi dữ liệu người dùng từ JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(userData, User.class);
+
+            // Upload avatar và lưu thông tin người dùng
+            fileStorageService.save(avatarFile);
 
             ApiResponse<User> response = userService.save(user);
 
@@ -103,6 +122,25 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+//    @PostMapping("/create-new-user")
+//    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user) {
+//        try {
+//
+//
+//            ApiResponse<User> response = userService.save(user);
+//
+//            if (response.getErrCode() == 0) {
+//                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//            } else {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//            }
+//        } catch (Exception e) {
+//            // Xử lý lỗi khi lưu file hoặc khi gọi service
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    }
 
     @PutMapping("edit-user")
     public ResponseEntity<ApiResponse<User>> handleEditUser(@RequestBody User userData) {

@@ -2,11 +2,13 @@ package com.bookingcare.security.service;
 
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.UserDto;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.repository.AllcodeRepository;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
+import com.bookingcare.service.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.bookingcare.model.dto.UserDto.convertToDto;
 
 @Service
 public class UserService implements IUserService {
@@ -30,6 +35,8 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AllcodeRepository allcodeRepository;
+    @Autowired
+    private FileStorageService fileStorageService;
     private void hidePasswords(List<User> users) {
         for (User user : users) {
             user.setPassword(null);
@@ -203,6 +210,34 @@ public class UserService implements IUserService {
             return new ApiResponse<>(1, "Error retrieving all codes", null);
         }
     }
+
+//    @Override
+//    public ApiResponse<UserDto> saveWithAvatar(UserDto userDto) {
+//        try {
+//            // Tạo một đối tượng User từ UserDto
+//            User user = new User();
+//            // Các trường khác tương ứng
+//
+//            // Lưu avatar nếu được cung cấp
+//            MultipartFile avatarFile = userDto.getAvatarFile();
+//            if (avatarFile != null && !avatarFile.isEmpty()) {
+//                String avatarPath = fileStorageService.save(avatarFile);
+//                user.setAvatar(avatarPath);
+//            }
+//
+//            // Lưu người dùng vào cơ sở dữ liệu
+//            User savedUser = userRepository.save(user);
+//
+//            // Chuyển đổi lại thành UserDto để trả về
+//            UserDto savedUserDto = convertToDto(savedUser);
+//
+//            return new ApiResponse<>(0, "Success", savedUserDto);
+//        } catch (Exception e) {
+//            return new ApiResponse<>(1, "Error saving user", null);
+//        }
+//    }
+
+
 
 }
 
