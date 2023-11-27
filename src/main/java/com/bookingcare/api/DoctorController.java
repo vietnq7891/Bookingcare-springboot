@@ -6,6 +6,7 @@ import com.bookingcare.model.entity.DoctorInfor;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +18,40 @@ import java.util.List;
 public class DoctorController {
     @Autowired
     DoctorService doctorService;
+
     @GetMapping("/top-doctor-home")
     public ApiResponse getTopDoctorHome(@RequestParam(defaultValue = "10") int limit) {
         try {
             return doctorService.getTopDoctorHome(limit);
         } catch (Exception e) {
             // Handle exceptions
-            return new ApiResponse(-1, "Error from server...",null);
+            return new ApiResponse(-1, "Error from server...", null);
         }
     }
+
+    @GetMapping("/get-all-doctors")
+    public ResponseEntity<ApiResponse<List<User>>> getAllDoctors() {
+        try {
+            ApiResponse<List<User>> response = doctorService.getAllDoctors();
+            return ResponseEntity.ok(response);
+        } catch (BaseException e) {
+            ApiResponse<List<User>> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+//@PostMapping("/save-infor-doctors")
+//    public ResponseEntity<ApiResponse<String>> postInforDoctor(@RequestBody DoctorInfor doctorInfor) {
+//        try {
+//            ApiResponse<String> response = doctorService.saveDetailInforDoctor(doctorInfor);
+//            return ResponseEntity.ok(response);
+//
+//        } catch (BaseException e) {
+//            ApiResponse<String> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+//            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
 
 }

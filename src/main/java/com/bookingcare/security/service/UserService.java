@@ -30,6 +30,11 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AllcodeRepository allcodeRepository;
+    private void hidePasswords(List<User> users) {
+        for (User user : users) {
+            user.setPassword(null);
+        }
+    }
 
     @Override
     public List<User> findAll() {
@@ -112,15 +117,26 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        // Kiểm tra xem có đối tượng User trong Optional hay không
+        if (optionalUser.isPresent()) {
+            // Lấy đối tượng User từ Optional
+            User user = optionalUser.get();
+
+            // Set giá trị trường 'password' thành null hoặc một giá trị mặc định nếu bạn muốn ẩn nó
+            user.setPassword(null);
+
+            // Trả lại Optional với đối tượng User đã được chỉnh sửa
+            return Optional.of(user);
+        }
+
+        return optionalUser;
     }
 
     // Ẩn mật khẩu trong danh sách người dùng
-    private void hidePasswords(List<User> users) {
-        for (User user : users) {
-            user.setPassword(null);
-        }
-    }
+
 
     @Override
     public ApiResponse<User> updateUserData(User data) {
