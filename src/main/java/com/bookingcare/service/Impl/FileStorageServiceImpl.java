@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -34,13 +31,19 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void save(MultipartFile file) {
+    public String save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()));
+            Path filePath = root.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Trả về đường dẫn tương đối của tệp tin đã lưu
+            String relativePath = root.relativize(filePath).toString();
+            return relativePath;
         } catch (FileAlreadyExistsException ex) {
             LOGGER.warn(ex.getMessage());
-        }
-        catch (Exception ex) {
+            // Xử lý trường hợp tệp tin đã tồn tại nếu cần
+            throw new BaseException(2, "FILE_ALREADY_EXISTS");
+        } catch (Exception ex) {
             LOGGER.error("FileStorageServiceImpl save with ex: {}", ex);
             throw new BaseException(1, "UPLOAD_ERROR");
         }
@@ -50,13 +53,18 @@ public class FileStorageServiceImpl implements FileStorageService {
     public Resource load(String fileName) {
         try {
             Path file = root.resolve(fileName);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable())
+
+            // Trả về đường dẫn tương đối của tệp tin đã lưu
+            String relativePath = root.relativize(file).toString();
+
+            Resource resource = new UrlResource(root.toUri().resolve(relativePath));
+            if (resource.exists() || resource.isReadable()) {
                 return resource;
-            else
-                throw new BaseException(2,"LOAD_FILE_ERROR");
+            } else {
+                throw new BaseException(2, "LOAD_FILE_ERROR");
+            }
         } catch (Exception ex) {
-            LOGGER.error("FileStorageServiceImpl save with ex: {}", ex);
+            LOGGER.error("FileStorageServiceImpl load with ex: {}", ex);
             throw new BaseException(1, "UPLOAD_ERROR");
         }
     }

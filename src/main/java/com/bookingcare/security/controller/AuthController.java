@@ -84,7 +84,6 @@ public class AuthController {
         try {
             List<User> users = userService.findAll();
 
-
             if (!users.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(0, "OK", users));
             } else {
@@ -108,7 +107,8 @@ public class AuthController {
             User user = objectMapper.readValue(userData, User.class);
 
             // Upload avatar và lưu thông tin người dùng
-            fileStorageService.save(avatarFile);
+            String avatarUrl = fileStorageService.save(avatarFile);
+            user.setAvatar(avatarUrl);
 
             ApiResponse<User> response = userService.save(user);
 
