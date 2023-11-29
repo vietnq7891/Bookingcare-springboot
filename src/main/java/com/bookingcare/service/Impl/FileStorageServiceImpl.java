@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -72,14 +74,27 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 
 
-
     @Override
     public String saveBase64(String base64Data, String fileName) {
         try {
             byte[] fileBytes = Base64.getDecoder().decode(base64Data);
 
-            Path filePath = root.resolve(fileName);
-            Files.write(filePath, fileBytes);
+            // Lấy phần mở rộng của tệp từ dữ liệu base64
+            String fileExtension = StringUtils.getFilenameExtension(base64Data);
+            if (StringUtils.isEmpty(fileExtension)) {
+                fileExtension = "png"; // Nếu không có phần mở rộng, sử dụng mặc định là "png"
+            }
+
+            // Tạo một tên tệp mới với thời gian được thêm vào
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String timestamp = dateFormat.format(new Date());
+            String newFileName = fileName + "_" + timestamp + "." + fileExtension;
+
+
+
+            // Tạo đường dẫn đầy đủ đến tệp mới
+            Path filePath = root.resolve(newFileName);
+            Files.write(filePath, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
             // Trả về đường dẫn tương đối của tệp tin đã lưu
             String relativePath = root.relativize(filePath).toString();

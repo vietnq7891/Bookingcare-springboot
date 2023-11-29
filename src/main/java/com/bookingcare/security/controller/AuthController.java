@@ -1,7 +1,6 @@
 package com.bookingcare.security.controller;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
-import com.bookingcare.model.dto.UserDto;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.jwt.JwtResponse;
@@ -23,17 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 @CrossOrigin("*")
 @RestController
@@ -114,13 +104,9 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Avatar is required", null));
             }
-            String fileExtension = StringUtils.getFilenameExtension(avatarBase64);
-            if (StringUtils.isEmpty(fileExtension)) {
-                fileExtension = "png";
-            }
 
             // Upload avatar từ base64 và lưu thông tin người dùng
-            String avatarUrl = fileStorageService.saveBase64(avatarBase64, user.getUsername() + "." + fileExtension);
+            String avatarUrl = fileStorageService.saveBase64(avatarBase64,  user.getUsername() );
             if (StringUtils.isEmpty(avatarUrl)) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
@@ -159,13 +145,10 @@ public class AuthController {
 
             // Kiểm tra xem avatarBase64 có dữ liệu không
             if (!StringUtils.isEmpty(avatarBase64)) {
-                String fileExtension = StringUtils.getFilenameExtension(avatarBase64);
-                if (StringUtils.isEmpty(fileExtension)) {
-                    fileExtension = "png";
-                }
+
 
                 // Upload avatar từ base64 và lưu thông tin người dùng
-                String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getUsername() + "." + fileExtension);
+                String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getUsername() );
                 if (StringUtils.isEmpty(avatarUrl)) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));

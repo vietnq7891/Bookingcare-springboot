@@ -2,6 +2,7 @@ package com.bookingcare.api;
 
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.DoctorDTO;
 import com.bookingcare.model.entity.DoctorInfor;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.service.DoctorService;
@@ -29,29 +30,32 @@ public class DoctorController {
         }
     }
 
-    @GetMapping("/get-all-doctors")
-    public ResponseEntity<ApiResponse<List<User>>> getAllDoctors() {
+    @PostMapping("/save-infor-doctors")
+    public ResponseEntity<ApiResponse<Void>> saveDoctorData(@RequestBody DoctorDTO doctorDTO) {
         try {
-            ApiResponse<List<User>> response = doctorService.getAllDoctors();
+            ApiResponse<Void> response = doctorService.saveDetailInforDoctor(doctorDTO);
             return ResponseEntity.ok(response);
         } catch (BaseException e) {
-            ApiResponse<List<User>> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            // Xử lý lỗi và trả về ApiResponse với thông điệp lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(-1, "Error from the server", null));
         }
-
-
     }
-//@PostMapping("/save-infor-doctors")
-//    public ResponseEntity<ApiResponse<String>> postInforDoctor(@RequestBody DoctorInfor doctorInfor) {
+
+//    @GetMapping("/get-all-doctors")
+//    public ResponseEntity<ApiResponse<List<User>>> getAllDoctors() {
 //        try {
-//            ApiResponse<String> response = doctorService.saveDetailInforDoctor(doctorInfor);
+//            ApiResponse<List<User>> response = doctorService.getAllDoctors();
 //            return ResponseEntity.ok(response);
-//
 //        } catch (BaseException e) {
-//            ApiResponse<String> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+//            ApiResponse<List<User>> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
 //            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
+//
+//
 //    }
+
+
 
 
 }
