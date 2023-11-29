@@ -12,12 +12,14 @@ import com.bookingcare.service.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +46,22 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Override
     public List<User> findAll() {
         List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            String avatarFileName = user.getAvatar(); // Lấy tên file avatar từ đối tượng User
+            Resource avatarResource = fileStorageService.load(avatarFileName); // Lấy Resource của avatar
+
+            // Lấy đường dẫn tương đối của Resource
+            Path root;
+            String relativePath = root.relativize(Paths.get(avatarResource.getURI())).toString();
+
+            // Set giá trị đường dẫn tương đối vào trường avatar của User
+            user.setAvatar(relativePath);
+        }
+
         hidePasswords(users);
         return users;
     }
@@ -178,6 +194,7 @@ public class UserService implements IUserService {
 
                 // Cập nhật thông tin phản hồi
                 response.setData(updatedUser);
+                response.setErrCode(0);
                 response.setErrMessage("Update the user succeeds");
             } else {
                 response.setErrCode(1);

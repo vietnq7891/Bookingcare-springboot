@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.util.Base64;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -26,7 +27,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             Files.createDirectories(root);
         } catch (Exception ex) {
             LOGGER.error("FileStorageServiceImpl createDirectories with ex: {}", ex);
-            throw new BaseException(500,"INTERNAL_SERVER_ERROR");
+            throw new BaseException(500, "INTERNAL_SERVER_ERROR");
         }
     }
 
@@ -65,6 +66,26 @@ public class FileStorageServiceImpl implements FileStorageService {
             }
         } catch (Exception ex) {
             LOGGER.error("FileStorageServiceImpl load with ex: {}", ex);
+            throw new BaseException(1, "UPLOAD_ERROR");
+        }
+    }
+
+
+
+
+    @Override
+    public String saveBase64(String base64Data, String fileName) {
+        try {
+            byte[] fileBytes = Base64.getDecoder().decode(base64Data);
+
+            Path filePath = root.resolve(fileName);
+            Files.write(filePath, fileBytes);
+
+            // Trả về đường dẫn tương đối của tệp tin đã lưu
+            String relativePath = root.relativize(filePath).toString();
+            return relativePath;
+        } catch (Exception ex) {
+            LOGGER.error("FileStorageServiceImpl saveBase64 with ex: {}", ex);
             throw new BaseException(1, "UPLOAD_ERROR");
         }
     }

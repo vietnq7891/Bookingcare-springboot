@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +85,7 @@ public class AuthController {
         try {
             List<User> users = userService.findAll();
 
+
             if (!users.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(0, "OK", users));
             } else {
@@ -100,15 +102,36 @@ public class AuthController {
     @PostMapping("/create-new-user")
     public ResponseEntity<ApiResponse<User>> handleCreateNewUser(
             @RequestParam("user") String userData,
-            @RequestParam("avatar") MultipartFile avatarFile) {
+            @RequestParam("avatar") String avatarBase64) {
         try {
             // Chuyển đổi dữ liệu người dùng từ JSON
             ObjectMapper objectMapper = new ObjectMapper();
             User user = objectMapper.readValue(userData, User.class);
 
-            // Upload avatar và lưu thông tin người dùng
-            String avatarUrl = fileStorageService.save(avatarFile);
+
+            // Kiểm tra xem avatarBase64 có dữ liệu không
+            if (StringUtils.isEmpty(avatarBase64)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Avatar is required", null));
+            }
+            String fileExtension = StringUtils.getFilenameExtension(avatarBase64);
+            if (StringUtils.isEmpty(fileExtension)) {
+                fileExtension = "png";
+            }
+
+            // Upload avatar từ base64 và lưu thông tin người dùng
+            String avatarUrl = fileStorageService.saveBase64(avatarBase64, user.getUsername() + "." + fileExtension);
+            if (StringUtils.isEmpty(avatarUrl)) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
+            }
             user.setAvatar(avatarUrl);
+
+            // Kiểm tra dữ liệu người dùng trước khi lưu
+            if (user == null || user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Invalid user data", null));
+            }
 
             ApiResponse<User> response = userService.save(user);
 
@@ -118,40 +141,53 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         } catch (Exception e) {
-            // Xử lý lỗi khi lưu file hoặc khi gọi service
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            // Xử lý lỗi khi chuyển đổi dữ liệu người dùng hoặc khi gọi service
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error", null));
         }
     }
 
 
-//    @PostMapping("/create-new-user")
-//    public ResponseEntity<ApiResponse<User>> handleCreateNewUser(@RequestBody User user) {
-//        try {
-//
-//
-//            ApiResponse<User> response = userService.save(user);
-//
-//            if (response.getErrCode() == 0) {
-//                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//            }
-//        } catch (Exception e) {
-//            // Xử lý lỗi khi lưu file hoặc khi gọi service
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
+    @PutMapping("/edit-user")
+    public ResponseEntity<ApiResponse<User>> handleEditUser(
+            @RequestParam("user") String userData,
+            @RequestParam("avatar") String avatarBase64) {
+        try {
+            // Chuyển đổi dữ liệu người dùng từ JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            User updatedUser = objectMapper.readValue(userData, User.class);
 
-    @PutMapping("edit-user")
-    public ResponseEntity<ApiResponse<User>> handleEditUser(@RequestBody User userData) {
-        ApiResponse<User> response = userService.updateUserData(userData);
+            // Kiểm tra xem avatarBase64 có dữ liệu không
+            if (!StringUtils.isEmpty(avatarBase64)) {
+                String fileExtension = StringUtils.getFilenameExtension(avatarBase64);
+                if (StringUtils.isEmpty(fileExtension)) {
+                    fileExtension = "png";
+                }
 
-        if (response.getErrCode() == 0) {
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                // Upload avatar từ base64 và lưu thông tin người dùng
+                String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getUsername() + "." + fileExtension);
+                if (StringUtils.isEmpty(avatarUrl)) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
+                }
+                updatedUser.setAvatar(avatarUrl);
+            }
+
+            // Lưu thông tin người dùng cập nhật
+            ApiResponse<User> response = userService.updateUserData(updatedUser);
+
+            if (response.getErrCode() == 0) {
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            // Xử lý lỗi khi chuyển đổi dữ liệu người dùng hoặc khi gọi service
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error", null));
         }
     }
+
 
     @DeleteMapping("/delete-user")
     public ResponseEntity<ApiResponse> deleteUser(@RequestBody User user) {
