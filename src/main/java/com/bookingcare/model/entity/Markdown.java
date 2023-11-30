@@ -1,6 +1,7 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,15 +30,13 @@ public class Markdown {
     private int specialtyId;
     private int clinicId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "createdAt")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "updatedAt")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctorId",insertable = false, updatable = false)
     private User user;
 

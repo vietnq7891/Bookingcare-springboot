@@ -31,11 +31,10 @@ public class User {
     private String avatar;
 
 
-//    @Column(nullable = false)
    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
-//    @Column( nullable = false)
+
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 

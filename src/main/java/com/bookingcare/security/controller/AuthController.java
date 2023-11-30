@@ -143,7 +143,8 @@ public class AuthController {
             ObjectMapper objectMapper = new ObjectMapper();
             User updatedUser = objectMapper.readValue(userData, User.class);
 
-            // Kiểm tra xem avatarBase64 có dữ liệu không
+
+//             Kiểm tra xem avatarBase64 có dữ liệu không
             if (!StringUtils.isEmpty(avatarBase64)) {
 
 

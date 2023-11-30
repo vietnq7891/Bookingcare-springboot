@@ -1,6 +1,7 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -37,15 +38,17 @@ public class DoctorInfor {
 
     private String note;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer count;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "createdAt")
+    public DoctorInfor() {
+        this.count = 0;
+    }
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "updatedAt")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 
      @OneToOne

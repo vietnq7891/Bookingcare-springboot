@@ -30,30 +30,30 @@ public class DoctorController {
         }
     }
 
-//    @PostMapping("/save-infor-doctors")
-//    public ResponseEntity<ApiResponse<Void>> saveDoctorData(@RequestBody DoctorDTO doctorDTO) {
-//        try {
-//            ApiResponse<Void> response = doctorService.saveDetailInforDoctor(doctorDTO);
-//            return ResponseEntity.ok(response);
-//        } catch (BaseException e) {
-//            // Xử lý lỗi và trả về ApiResponse với thông điệp lỗi
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse<>(-1, "Error from the server", null));
-//        }
-//    }
+    @PostMapping("/save-infor-doctors")
+    public ResponseEntity<ApiResponse<Void>> saveDoctorData(@RequestBody DoctorDTO doctorDTO) {
+        try {
+            ApiResponse<Void> response = doctorService.saveDetailInforDoctor(doctorDTO);
+            return ResponseEntity.ok(response);
+        } catch (BaseException e) {
+            // Xử lý lỗi và trả về ApiResponse với thông điệp lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(-1, "Error from the server", null));
+        }
+    }
 
-//    @GetMapping("/get-all-doctors")
-//    public ResponseEntity<ApiResponse<List<User>>> getAllDoctors() {
-//        try {
-//            ApiResponse<List<User>> response = doctorService.getAllDoctors();
-//            return ResponseEntity.ok(response);
-//        } catch (BaseException e) {
-//            ApiResponse<List<User>> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
-//            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//
-//    }
+    @GetMapping("/get-all-doctors")
+    public ResponseEntity<ApiResponse<List<User>>> getAllDoctors() {
+        try {
+            ApiResponse<List<User>> response = doctorService.getAllDoctors();
+            return ResponseEntity.ok(response);
+        } catch (BaseException e) {
+            ApiResponse<List<User>> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
 
 
 

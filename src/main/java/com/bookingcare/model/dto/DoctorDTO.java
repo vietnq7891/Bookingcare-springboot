@@ -20,6 +20,6 @@ public class DoctorDTO {
     private String addressClinic;
     private String note;
     private Integer clinicId;
-    private String specialtyId;
-
+    private Integer specialtyId;
+    private Integer count;
 }
