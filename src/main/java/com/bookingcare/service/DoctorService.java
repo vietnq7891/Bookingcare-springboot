@@ -6,7 +6,7 @@ import com.bookingcare.model.dto.DoctorDTO;
 
 public interface DoctorService {
     ApiResponse getTopDoctorHome(int limit);
-    ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO);
+//    ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO);
 
 
 //    ValidationResult checkRequiredFields(DoctorInfor doctorInfor);

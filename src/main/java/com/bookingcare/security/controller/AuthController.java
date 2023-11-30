@@ -106,7 +106,7 @@ public class AuthController {
             }
 
             // Upload avatar từ base64 và lưu thông tin người dùng
-            String avatarUrl = fileStorageService.saveBase64(avatarBase64,  user.getUsername() );
+            String avatarUrl = fileStorageService.saveBase64(avatarBase64,  user.getRoleId() );
             if (StringUtils.isEmpty(avatarUrl)) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
@@ -148,7 +148,7 @@ public class AuthController {
 
 
                 // Upload avatar từ base64 và lưu thông tin người dùng
-                String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getUsername() );
+                String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getRoleId() );
                 if (StringUtils.isEmpty(avatarUrl)) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));

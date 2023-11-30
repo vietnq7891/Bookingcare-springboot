@@ -50,58 +50,58 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    @Transactional
-    public ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO) {
-        try {
-            // Upsert to Markdown
-            if ("CREATE".equals(doctorDTO.getAction())) {
-                Markdown markdown = new Markdown();
-                setMarkdownFields(markdown, doctorDTO);
-                markdownRepository.save(markdown);
-            } else if ("EDIT".equals(doctorDTO.getAction())) {
-                Optional<Markdown> optionalMarkdown = markdownRepository.findByDoctorId(doctorDTO.getDoctorId());
-                optionalMarkdown.ifPresent(markdown -> {
-                    setMarkdownFields(markdown, doctorDTO);
-                    markdownRepository.save(markdown);
-                });
-            }
-
-            // Upsert to Doctor Info
-            Optional<DoctorInfor> optionalDoctorInfor = doctorInforRepository.findByDoctorId(doctorDTO.getDoctorId());
-            if (optionalDoctorInfor.isPresent()) {
-                DoctorInfor doctorInfor = optionalDoctorInfor.get();
-                setDoctorInforFields(doctorInfor, doctorDTO);
-                doctorInforRepository.save(doctorInfor);
-            } else {
-                DoctorInfor doctorInfor = new DoctorInfor();
-                setDoctorInforFields(doctorInfor, doctorDTO);
-                doctorInforRepository.save(doctorInfor);
-            }
-
-            return new ApiResponse(0, "Save doctor information successfully!");
-        } catch (Exception e) {
-            throw new BaseException("Undefined error: " + e.getMessage());
-        }
-    }
-
-    private void setMarkdownFields(Markdown markdown, DoctorDTO doctorDTO) {
-        markdown.setContentHTML(doctorDTO.getContentHTML());
-        markdown.setContentMarkdown(doctorDTO.getContentMarkdown());
-        markdown.setDescription(doctorDTO.getDescription());
-        markdown.setDoctorId(doctorDTO.getDoctorId());
-    }
-
-    private void setDoctorInforFields(DoctorInfor doctorInfor, DoctorDTO doctorDTO) {
-        doctorInfor.setDoctorId(doctorDTO.getDoctorId());
-        doctorInfor.setPriceId(doctorDTO.getSelectedPrice());
-        doctorInfor.setProvinceId(doctorDTO.getSelectedProvince());
-        doctorInfor.setPaymentId(doctorDTO.getSelectedPayment());
-        doctorInfor.setNameClinic(doctorDTO.getNameClinic());
-        doctorInfor.setAddressClinic(doctorDTO.getAddressClinic());
-        doctorInfor.setNote(doctorDTO.getNote());
-        doctorInfor.setSpecialtyId(doctorDTO.getSpecialtyId());
-        doctorInfor.setClinicId(doctorDTO.getClinicId());
-    }
+//    @Transactional
+//    public ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO) {
+//        try {
+//            // Upsert to Markdown
+//            if ("CREATE".equals(doctorDTO.getAction())) {
+//                Markdown markdown = new Markdown();
+//                setMarkdownFields(markdown, doctorDTO);
+//                markdownRepository.save(markdown);
+//            } else if ("EDIT".equals(doctorDTO.getAction())) {
+//                Optional<Markdown> optionalMarkdown = markdownRepository.findByDoctorId(doctorDTO.getDoctorId());
+//                optionalMarkdown.ifPresent(markdown -> {
+//                    setMarkdownFields(markdown, doctorDTO);
+//                    markdownRepository.save(markdown);
+//                });
+//            }
+//
+//            // Upsert to Doctor Info
+//            Optional<DoctorInfor> optionalDoctorInfor = doctorInforRepository.findByDoctorId(doctorDTO.getDoctorId());
+//            if (optionalDoctorInfor.isPresent()) {
+//                DoctorInfor doctorInfor = optionalDoctorInfor.get();
+//                setDoctorInforFields(doctorInfor, doctorDTO);
+//                doctorInforRepository.save(doctorInfor);
+//            } else {
+//                DoctorInfor doctorInfor = new DoctorInfor();
+//                setDoctorInforFields(doctorInfor, doctorDTO);
+//                doctorInforRepository.save(doctorInfor);
+//            }
+//
+//            return new ApiResponse(0, "Save doctor information successfully!");
+//        } catch (Exception e) {
+//            throw new BaseException("Undefined error: " + e.getMessage());
+//        }
+//    }
+//
+//    private void setMarkdownFields(Markdown markdown, DoctorDTO doctorDTO) {
+//        markdown.setContentHTML(doctorDTO.getContentHTML());
+//        markdown.setContentMarkdown(doctorDTO.getContentMarkdown());
+//        markdown.setDescription(doctorDTO.getDescription());
+//        markdown.setDoctorId(doctorDTO.getDoctorId());
+//    }
+//
+//    private void setDoctorInforFields(DoctorInfor doctorInfor, DoctorDTO doctorDTO) {
+//        doctorInfor.setDoctorId(doctorDTO.getDoctorId());
+//        doctorInfor.setPriceId(doctorDTO.getSelectedPrice());
+//        doctorInfor.setProvinceId(doctorDTO.getSelectedProvince());
+//        doctorInfor.setPaymentId(doctorDTO.getSelectedPayment());
+//        doctorInfor.setNameClinic(doctorDTO.getNameClinic());
+//        doctorInfor.setAddressClinic(doctorDTO.getAddressClinic());
+//        doctorInfor.setNote(doctorDTO.getNote());
+//        doctorInfor.setSpecialtyId(doctorDTO.getSpecialtyId());
+//        doctorInfor.setClinicId(doctorDTO.getClinicId());
+//    }
 
 }
 
