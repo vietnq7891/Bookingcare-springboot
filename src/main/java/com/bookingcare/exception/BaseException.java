@@ -14,5 +14,6 @@ public class BaseException extends RuntimeException {
     public ErrorMessage getErrorMessage() {
         return errorMessage;
     }
+
 }
 

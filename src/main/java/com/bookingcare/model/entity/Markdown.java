@@ -27,13 +27,17 @@ public class Markdown {
     private String description;
 
     private int doctorId;
+
     private int specialtyId;
+
     private int clinicId;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
+    @Column(nullable = false)
     private Date createdAt;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
+    @Column(nullable = false)
     private Date updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY)

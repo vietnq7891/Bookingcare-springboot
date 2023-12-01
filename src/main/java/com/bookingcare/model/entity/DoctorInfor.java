@@ -2,6 +2,7 @@ package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -46,24 +47,30 @@ public class DoctorInfor {
     }
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
+    @Column(nullable = false)
     private Date createdAt;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
+    @Column(nullable = false)
     private Date updatedAt;
 
      @OneToOne
+     @JsonIgnore
      @JoinColumn(name = "doctorId",insertable = false, updatable = false)
      private User doctor;
 
      @ManyToOne
+     @JsonIgnore
      @JoinColumn(name = "priceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode priceTypeData;
 
      @ManyToOne
+     @JsonIgnore
      @JoinColumn(name = "provinceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode provinceTypeData;
 
      @ManyToOne
+     @JsonIgnore
      @JoinColumn(name = "paymentId", referencedColumnName = "keyMap",insertable = false, updatable = false)
      private Allcode paymentTypeData;
 }

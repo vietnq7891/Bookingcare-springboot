@@ -55,7 +55,17 @@ public class DoctorController {
 
     }
 
-
-
+    @GetMapping("/")
+    public ApiResponse<Object> getDetailDoctorById(@RequestParam("id") Integer id) {
+        try {
+            // Call your service to get doctor information
+            Object infor = doctorService.getDetailDoctorById(id);
+            return new ApiResponse<>(0, "Success", infor);
+        } catch (BaseException e) {
+            return new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(-1, "Error from the server", null);
+        }
+    }
 
 }

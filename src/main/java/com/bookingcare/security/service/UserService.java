@@ -73,7 +73,7 @@ public class UserService implements IUserService {
 
             // Lưu người dùng vào cơ sở dữ liệu
             User savedUser = userRepository.save(user);
-
+            savedUser.setPassword(null);
             // Cập nhật thông tin phản hồi
             response.setData(savedUser);
             response.setErrMessage("User created successfully");
@@ -174,6 +174,8 @@ public class UserService implements IUserService {
 
                 // Lưu người dùng đã cập nhật vào cơ sở dữ liệu
                 User updatedUser = userRepository.save(existingUser);
+
+                updatedUser.setPassword(null);
 
                 // Cập nhật thông tin phản hồi
                 response.setData(updatedUser);

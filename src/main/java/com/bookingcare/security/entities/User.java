@@ -1,6 +1,7 @@
 package com.bookingcare.security.entities;
 import com.bookingcare.model.entity.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -40,28 +41,35 @@ public class User {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "roleId", referencedColumnName = "keyMap", insertable = false, updatable = false)
     private Allcode roleData;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "positionId", referencedColumnName = "keyMap", insertable = false, updatable = false)
     private Allcode positionData;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "gender", referencedColumnName = "keyMap", insertable = false, updatable = false)
     private Allcode genderData;
 
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
+    @JsonIgnore
     private Markdown markdown;
 
-    @OneToOne(mappedBy = "doctor")
+    @OneToOne(mappedBy = "doctor",fetch = FetchType.LAZY)
+    @JsonIgnore
     private DoctorInfor doctorInfo;
 
-    @OneToMany(mappedBy = "doctorData")
+    @OneToMany(mappedBy = "doctorData",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Schedule> doctorData;
 
-    @OneToMany(mappedBy = "patientData")
+    @OneToMany(mappedBy = "patientData",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Booking> patientData;
 
 }

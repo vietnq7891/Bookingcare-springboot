@@ -1,7 +1,6 @@
 package com.bookingcare.service.Impl;
 
 import com.bookingcare.common.ApiResponse;
-import com.bookingcare.common.ValidationResult;
 import com.bookingcare.exception.BaseException;
 import com.bookingcare.model.dto.DoctorDTO;
 import com.bookingcare.model.entity.DoctorInfor;
@@ -13,13 +12,11 @@ import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
 import com.bookingcare.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -79,6 +76,11 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO) {
         try {
+
+            if (Objects.isNull(doctorDTO.getDoctorId()) || Objects.isNull(doctorDTO.getContentHTML()) || Objects.isNull(doctorDTO.getContentMarkdown())) {
+                return new ApiResponse(1, "Missing parameter", null);
+            }
+
             // Upsert to Markdown
             if ("CREATE".equals(doctorDTO.getAction())) {
                 Markdown markdown = new Markdown();
@@ -130,6 +132,15 @@ public class DoctorServiceImpl implements DoctorService {
         doctorInfor.setNote(doctorDTO.getNote());
         doctorInfor.setSpecialtyId(doctorDTO.getSpecialtyId());
         doctorInfor.setClinicId(doctorDTO.getClinicId());
+    }
+
+    @Override
+    public Optional<User> getDetailDoctorById(Integer inputId) {
+
+
+        Optional<User> userOptional = userRepository.findById(inputId);
+
+        return userOptional;
     }
 
 }
