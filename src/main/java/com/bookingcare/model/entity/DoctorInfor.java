@@ -1,8 +1,7 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,6 +10,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "doctor_infor")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class DoctorInfor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class DoctorInfor {
     @Column(nullable = false)
     private String addressClinic;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String nameClinic;
 
     private String note;
@@ -55,22 +55,22 @@ public class DoctorInfor {
     private Date updatedAt;
 
      @OneToOne
-     @JsonIgnore
+     @JsonBackReference
      @JoinColumn(name = "doctorId",insertable = false, updatable = false)
      private User doctor;
 
      @ManyToOne
-     @JsonIgnore
      @JoinColumn(name = "priceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
+     @JsonManagedReference
      private Allcode priceTypeData;
 
      @ManyToOne
-     @JsonIgnore
      @JoinColumn(name = "provinceId", referencedColumnName = "keyMap",insertable = false, updatable = false)
+     @JsonManagedReference
      private Allcode provinceTypeData;
 
      @ManyToOne
-     @JsonIgnore
      @JoinColumn(name = "paymentId", referencedColumnName = "keyMap",insertable = false, updatable = false)
+     @JsonManagedReference
      private Allcode paymentTypeData;
 }

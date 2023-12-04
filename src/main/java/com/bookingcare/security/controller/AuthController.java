@@ -1,6 +1,7 @@
 package com.bookingcare.security.controller;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.UserDTO;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.jwt.JwtResponse;
@@ -10,6 +11,7 @@ import com.bookingcare.service.FileStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -51,7 +54,6 @@ public class AuthController {
         if(userName == null || userName.isEmpty() || password == null || password.isEmpty()) {
             throw new BaseException(1, "Missing inputs parameters!");
         }
-
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -71,13 +73,19 @@ public class AuthController {
     }
 
     @GetMapping("/get-all-users")
-    public ResponseEntity<ApiResponse<List<User>>> handleGetAllUsers() {
+    public ResponseEntity<ApiResponse<List<UserDTO>>> handleGetAllUsers() {
         try {
             List<User> users = userService.findAll();
+            List<UserDTO> userDTOs = new ArrayList<>();
 
+            for (User user : users) {
+                UserDTO userDTO = new UserDTO();
+                BeanUtils.copyProperties(user, userDTO);
+                userDTOs.add(userDTO);
+            }
 
-            if (!users.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(0, "OK", users));
+            if (!userDTOs.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(0, "OK", userDTOs));
             } else {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(204, "No users found", null));
             }
@@ -85,8 +93,6 @@ public class AuthController {
             throw e;
         }
     }
-
-
 
 
     @PostMapping("/create-new-user")
@@ -111,7 +117,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
             }
-            user.setAvatar(avatarUrl);
+            user.setImage(avatarUrl);
 
             // Kiểm tra dữ liệu người dùng trước khi lưu
             if (user == null || user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
@@ -154,7 +160,7 @@ public class AuthController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
                 }
-                updatedUser.setAvatar(avatarUrl);
+                updatedUser.setImage(avatarUrl);
             }
 
             // Lưu thông tin người dùng cập nhật

@@ -2,12 +2,14 @@ package com.bookingcare.security.service;
 
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.UserDTO;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.repository.AllcodeRepository;
 import com.bookingcare.security.UserPrinciple;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.security.repo.IUserRepository;
 import com.bookingcare.service.FileStorageService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +47,6 @@ public class UserService implements IUserService {
     @Override
     public List<User> findAll() {
         List<User> users = userRepository.findAll();
-
         hidePasswords(users);
         return users;
     }
@@ -168,8 +170,8 @@ public class UserService implements IUserService {
                 existingUser.setPositionId(data.getPositionId());
                 existingUser.setGender(data.getGender());
                 existingUser.setPhoneNumber(data.getPhoneNumber());
-                if (data.getAvatar() != null) {
-                    existingUser.setAvatar(data.getAvatar());
+                if (data.getImage() != null) {
+                    existingUser.setImage(data.getImage());
                 }
 
                 // Lưu người dùng đã cập nhật vào cơ sở dữ liệu

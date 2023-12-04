@@ -50,3 +50,6 @@ spring:
 
 file:
   upload-dir: ./upload
+
+MAX_NUMBER_SCHEDULE: 10
+

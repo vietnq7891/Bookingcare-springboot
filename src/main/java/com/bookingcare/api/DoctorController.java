@@ -3,7 +3,11 @@ package com.bookingcare.api;
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
 import com.bookingcare.model.dto.DoctorDTO;
+import com.bookingcare.model.dto.ScheduleDTO;
+import com.bookingcare.model.dto.ScheduleItem;
+import com.bookingcare.model.dto.UserDTO;
 import com.bookingcare.model.entity.DoctorInfor;
+import com.bookingcare.model.entity.Schedule;
 import com.bookingcare.security.entities.User;
 import com.bookingcare.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,16 +59,57 @@ public class DoctorController {
 
     }
 
-    @GetMapping("/")
-    public ApiResponse<Object> getDetailDoctorById(@RequestParam("id") Integer id) {
+    @GetMapping("/get-detail-doctor-by-id")
+    public ResponseEntity<ApiResponse<User>> getDoctorDetailById(@RequestParam Integer id) {
         try {
-            // Call your service to get doctor information
-            Object infor = doctorService.getDetailDoctorById(id);
-            return new ApiResponse<>(0, "Success", infor);
+            ApiResponse<User> response = doctorService.getDetailDoctorById(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (BaseException e) {
-            return new ApiResponse<>(e.getErrorMessage().getCode(), e.getErrorMessage().getMessage(), null);
+            ApiResponse<User> errorResponse = new ApiResponse<>(e.getErrorMessage().getCode(), e.getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/bulk-create-schedule")
+    public ResponseEntity<ApiResponse<Object>> bulkCreateSchedule(@RequestBody ScheduleItem request) {
+        try {
+            doctorService.bulkCreateSchedule(request);
+            ApiResponse<Object> apiResponse = new ApiResponse<>(0, "Success", null);
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (BaseException e) {
+            ApiResponse<Object> apiResponse = new ApiResponse<>(500, e.getMessage(), null);
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        }
+    }
+    @GetMapping("/get-schedule-doctor-by-date")
+    public ResponseEntity<ApiResponse<?>> getScheduleByDate(@RequestParam Integer doctorId, @RequestParam String date) {
+        try {
+            ApiResponse<List<Schedule>> response = doctorService.getScheduleByDate(doctorId, date);
+            return ResponseEntity.ok(response);
+        } catch (BaseException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(500, e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/get-extra-infor-doctor-by-id")
+    public ResponseEntity<ApiResponse<DoctorInfor>> getExtraInforDoctorById(@RequestParam Integer doctorId) {
+        try {
+            ApiResponse<DoctorInfor> infor = doctorService.getExtraInforDoctorById(doctorId);
+            return ResponseEntity.status(200).body(infor);
         } catch (Exception e) {
-            return new ApiResponse<>(-1, "Error from the server", null);
+            return ResponseEntity.status(200).body(new ApiResponse<>(-1, "Error from the server", null));
+        }
+    }
+
+
+    @GetMapping("/get-profile-doctor-by-id")
+    public ResponseEntity<ApiResponse<Object>> getProfileDoctorById(@RequestParam Integer doctorId) {
+        try {
+            ApiResponse<Object> infor = doctorService.getProfileDoctorById(doctorId);
+            return ResponseEntity.ok(infor);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(-1, "Error from the server", null));
         }
     }
 

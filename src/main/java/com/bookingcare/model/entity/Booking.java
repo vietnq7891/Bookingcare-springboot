@@ -1,6 +1,9 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,6 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "booking")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +39,7 @@ public class Booking {
     private Date updatedAt;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "patientId", referencedColumnName = "id",insertable = false, updatable = false)
     private User patientData;
 

@@ -1,11 +1,9 @@
 package com.bookingcare.security.jwt;
 
-import com.bookingcare.exception.ErrorMessage;
+import com.bookingcare.model.dto.UserDTO;
 import com.bookingcare.security.entities.User;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 @Data
 
 public class JwtResponse {

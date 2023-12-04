@@ -1,7 +1,10 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,6 +16,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "allcodes")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Allcode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,23 +35,26 @@ public class Allcode implements Serializable {
 
 
     @OneToMany(mappedBy = "positionData")
-    @JsonIgnore
+    @JsonBackReference
     private List<User> usersByPosition;
 
     @OneToMany(mappedBy = "genderData")
-    @JsonIgnore
+    @JsonBackReference("usersByGenderRef")
     private List<User> usersByGender;
 
     @OneToMany(mappedBy = "timeTypeData")
     private List<Schedule> timeTypeData;
 
     @OneToMany(mappedBy = "priceTypeData")
+    @JsonBackReference
     private List<DoctorInfor> priceTypeData;
 
     @OneToMany(mappedBy = "provinceTypeData")
+    @JsonBackReference
     private List<DoctorInfor> provinceTypeData;
 
     @OneToMany(mappedBy = "paymentTypeData")
+    @JsonBackReference
     private List<DoctorInfor> paymentTypeData;
 
     @OneToMany(mappedBy = "timeTypeDataPatient")

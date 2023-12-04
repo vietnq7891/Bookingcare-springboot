@@ -1,7 +1,9 @@
 package com.bookingcare.service;
 
 import com.bookingcare.common.ApiResponse;
-import com.bookingcare.model.dto.DoctorDTO;
+import com.bookingcare.model.dto.*;
+import com.bookingcare.model.entity.DoctorInfor;
+import com.bookingcare.model.entity.Schedule;
 import com.bookingcare.security.entities.User;
 
 import java.util.List;
@@ -11,10 +13,11 @@ public interface DoctorService {
     ApiResponse getTopDoctorHome(int limit);
     ApiResponse<List<User>> getAllDoctors();
     ApiResponse saveDetailInforDoctor(DoctorDTO doctorDTO);
-    Optional<User> getDetailDoctorById(Integer inputId);
+    ApiResponse<User> getDetailDoctorById(Integer inputId);
 
-
-//    ValidationResult checkRequiredFields(DoctorInfor doctorInfor);
-//    ApiResponse<String> saveDetailInforDoctor(DoctorInfor inputData);
+    ApiResponse<Object> bulkCreateSchedule(ScheduleItem request);
+    ApiResponse<List<Schedule>> getScheduleByDate(Integer doctorId, String date);
+    ApiResponse<DoctorInfor> getExtraInforDoctorById(Integer idInput);
+    ApiResponse<Object> getProfileDoctorById(Integer inputId);
 
 }
