@@ -1,9 +1,7 @@
 package com.bookingcare.model.entity;
 
 import com.bookingcare.security.entities.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -39,11 +37,14 @@ public class Booking {
     private Date updatedAt;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference("a")
+    @JsonIgnore
     @JoinColumn(name = "patientId", referencedColumnName = "id",insertable = false, updatable = false)
     private User patientData;
 
     @ManyToOne
     @JoinColumn(name = "timeType", referencedColumnName = "keyMap",insertable = false, updatable = false)
+    @JsonManagedReference
+    @JsonIgnore
     private Allcode timeTypeDataPatient;
 }

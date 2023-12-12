@@ -2,6 +2,7 @@ package com.bookingcare.security.service;
 
 import com.bookingcare.common.ApiResponse;
 import com.bookingcare.exception.BaseException;
+import com.bookingcare.model.dto.BookingDTO;
 import com.bookingcare.model.dto.UserDTO;
 import com.bookingcare.model.entity.Allcode;
 import com.bookingcare.repository.AllcodeRepository;
@@ -212,6 +213,33 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             logger.error("Error retrieving all codes", e);
             return new ApiResponse<>(1, "Error retrieving all codes", null);
+        }
+    }
+
+    public User findOrCreateUser(BookingDTO requestDTO) {
+        // Tìm kiếm người dùng theo địa chỉ email
+        User existingUser = userRepository.findByEmail(requestDTO.getEmail());
+
+        if (existingUser != null) {
+            // Cập nhật thông tin người dùng nếu tồn tại
+            existingUser.setGender(requestDTO.getSelectedGender());
+            existingUser.setAddress(requestDTO.getAddress());
+            existingUser.setFirstName(requestDTO.getFullName());
+            existingUser.setPhoneNumber(requestDTO.getPhoneNumber());
+            userRepository.save(existingUser);
+
+            return existingUser;
+        } else {
+            // Tạo mới người dùng nếu không tồn tại
+            User newUser = new User();
+            newUser.setEmail(requestDTO.getEmail());
+            newUser.setRoleId("R3");
+            newUser.setGender(requestDTO.getSelectedGender());
+            newUser.setAddress(requestDTO.getAddress());
+            newUser.setFirstName(requestDTO.getFullName());
+            newUser.setPhoneNumber(requestDTO.getPhoneNumber());
+
+            return userRepository.save(newUser);
         }
     }
 

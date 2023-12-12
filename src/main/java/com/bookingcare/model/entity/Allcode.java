@@ -39,10 +39,11 @@ public class Allcode implements Serializable {
     private List<User> usersByPosition;
 
     @OneToMany(mappedBy = "genderData")
-    @JsonBackReference("usersByGenderRef")
+    @JsonBackReference
     private List<User> usersByGender;
 
     @OneToMany(mappedBy = "timeTypeData")
+    @JsonBackReference
     private List<Schedule> timeTypeData;
 
     @OneToMany(mappedBy = "priceTypeData")
@@ -58,5 +59,6 @@ public class Allcode implements Serializable {
     private List<DoctorInfor> paymentTypeData;
 
     @OneToMany(mappedBy = "timeTypeDataPatient")
+    @JsonBackReference
     private List<Booking> timeTypeDataPatient;
 }

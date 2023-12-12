@@ -11,14 +11,13 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "user")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true, nullable = false)
+
     private String username;
-    @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private String email;
@@ -42,6 +41,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId", referencedColumnName = "keyMap", insertable = false, updatable = false)
+    @JsonIgnore
     private Allcode roleData;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -55,7 +55,6 @@ public class User {
     @JsonManagedReference
     @JsonIgnore
     private Allcode genderData;
-
 
     @OneToOne(mappedBy = "user")
     @JsonManagedReference
@@ -73,9 +72,7 @@ public class User {
     private List<Schedule> doctorData;
 
     @OneToMany(mappedBy = "patientData",fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference("a")
     @JsonIgnore
     private List<Booking> patientData;
-
-
 }

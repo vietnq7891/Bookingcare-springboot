@@ -113,17 +113,16 @@ public class AuthController {
 
             // Upload avatar từ base64 và lưu thông tin người dùng
             String avatarUrl = fileStorageService.saveBase64(avatarBase64,  user.getRoleId() );
-            if (StringUtils.isEmpty(avatarUrl)) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save avatar", null));
-            }
-            user.setImage(avatarUrl);
+            if (!StringUtils.isEmpty(avatarUrl)) {
+                user.setImage(avatarUrl);
 
-            // Kiểm tra dữ liệu người dùng trước khi lưu
-            if (user == null || user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Invalid user data", null));
+                // Kiểm tra dữ liệu người dùng trước khi lưu
+                if (user == null || user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Invalid user data", null));
+                }
             }
+
 
             ApiResponse<User> response = userService.save(user);
 
@@ -152,8 +151,6 @@ public class AuthController {
 
 //             Kiểm tra xem avatarBase64 có dữ liệu không
             if (!StringUtils.isEmpty(avatarBase64)) {
-
-
                 // Upload avatar từ base64 và lưu thông tin người dùng
                 String avatarUrl = fileStorageService.saveBase64(avatarBase64, updatedUser.getRoleId() );
                 if (StringUtils.isEmpty(avatarUrl)) {

@@ -17,4 +17,5 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.roleId = 'R2' ORDER BY u.createdAt DESC")
     List<User> findTopDoctors(@Param("limit") int limit);
     List<User> findAllByRoleId(String roleId);
+    User findByEmail(String email);
 }
